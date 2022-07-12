@@ -1,44 +1,24 @@
+import React from "react"
+import "./App.css"
+import { useState, useEffect} from "react"
+import GiphyList from "./Components/GiphyList"
+import { Route } from "react-router-dom";
 
-import './App.css';
-import {Component} from 'react'
+const App =()=>{
+ const [giphy, setGiphy]=useState(null)
 
-class App extends Component {
-  // constructor(){
-  //   super()
-  //   this.state = {
-  //     giphy: []
-  //   }
-  // }
-
-  state = {
-    giphy: []
-  }
-
-  componentDidMount(){
+ useEffect(()=>{
     fetch("https://api.giphy.com/v1/gifs/trending?api_key=wK5f397gK7oRFdHV0rlksU3XR9ZUvEaT&limit=25&rating=g")
-    .then(res => res.json())
-    .then(json => {
-      console.log(json.data)
-      this.setState({giphy: json.data})
-    })
-  }
-
-  render(){
-    return (
-      <div className="App">
-       <h1>GIPHY APP</h1>
-
-       {
-         this.state.giphy.map(g => (
-           <div key={g.id}>
-             <img src={g.images.original.url} alt={g.title}/>
-             <h3>{g.title}</h3>
-            </div>
-         ))
-       }
-      </div>
+    .then((res)=> res.json())
+    .then(data => setGiphy(data.data))
+ },[])
+    return(
+        <div>
+            <h1>Giphy App</h1>
+            <Route path='/'>
+                {giphy && <GiphyList gif={giphy} msg="GIPHYS COMPONENT" />}
+            </Route>
+        </div>
     )
-  }
 }
-
-export default App;
+export default App
